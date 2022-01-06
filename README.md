@@ -1,1 +1,1 @@
-This is a repo to practive SQL ddl and dml.
+This is a repo to practice SQL ddl and dml.
