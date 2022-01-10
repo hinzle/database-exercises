@@ -89,9 +89,3 @@ FROM employees
 WHERE last_name LIKE '%q%'
 AND last_name NOT LIKE '%qu%'
 ORDER BY last_name;
-
-
-
-
-
-
