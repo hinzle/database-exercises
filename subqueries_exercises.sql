@@ -63,14 +63,38 @@ WHERE emp_no IN
 ;
 
 -- 5
-
+-- 154543
 SELECT *
 FROM salaries
-WHERE AVG(salary) <salary
-
-
+WHERE salary>
+	(
+	SELECT AVG(salary)
+	FROM salaries
+	)
+AND 
+to_date >NOW()
 ;
 
+-- 6
+-- 
+SELECT (count(max(salary)-stddev(salary)))/(count(salary))
+FROM salaries
+WHERE to_date >now()
+;
 
+WHERE salary >
+	(
+	SELECT count(max(salary)-stddev(salary))
+	FROM salaries
+	)
+AND 
+to_date >NOW()
+;
+
+(
+SELECT count(salary)
+FROM salaries
+)
+;
 
 

@@ -1,86 +1,121 @@
 -- Join Example Database
+-- 1
+use join_example_db;
 
--- Question 1:
+select * from users;
+select * from roles;
+-- select * from users join roles on 1=1;
 
-USE join_example_db;
-SELECT * FROM users;
-SELECT * FROM roles;
+-- using(countrycode)
 
--- Question 2: 
+-- 2
+-- guess 4
+select * 
+from users 
+join roles;
 
-SELECT * FROM users
-JOIN roles 
-ON users.role_id = roles.id;
+-- guess 6
+select * 
+from users 
+left join roles
+on roles.id=users.role_id;
 
-SELECT * FROM users
-LEFT JOIN roles
-ON users.role_id = roles.id;
+-- guess 4
+select * 
+from users 
+right join roles
+on roles.id=users.role_id;
 
-SELECT * FROM users
-RIGHT JOIN roles
-ON users.role_id = roles.id;
-
-SELECT * FROM roles
-RIGHT JOIN users
-ON roles.id = users.role_id;
-
--- Question 3:
-
-SELECT roles.name, COUNT(users.role_id)
-FROM roles
-LEFT JOIN users ON users.role_id = roles.id
-GROUP BY roles.name;
+-- 3
+select roles.name, count(users.role_id)
+from users 
+right join roles
+on roles.id=users.role_id
+group by roles.id;
 
 -- Employees Database
+-- 1
+use employees;
 
--- Question 1: 
+-- 2 Using the example in the Associative Table Joins section as a guide, write a query that shows each department along with the name of the current manager for that department.
+/*
+select *
+from dept_manager
+where to_date > NOW();
+-- group by dept_no;
+*/
 
-USE employees;
+select departments.dept_name as 'Department Name',
+	concat(employees.first_name,' ',employees.last_name) as 'Department Manager'
+from dept_manager
+join employees
+using(emp_no)
+-- on dept_manager.emp_no=employees.emp_no
+join departments
+using(dept_no)
+where to_date>NOW();
 
--- Question 2: 
 
-SELECT d.dept_name as 'Department Name', CONCAT(e.first_name, ' ', e.last_name) AS 'Department Manager' 
-FROM employees as e 
-JOIN dept_manager as dm
-ON e.emp_no = dm.emp_no
-JOIN departments as d
-ON d.dept_no = dm.dept_no
-WHERE dm.to_date = '9999-01-01';
+-- where to_date>NOW()
+-- group by dept_no
+-- join departments
+-- using(dept_no);
 
--- Question 3: 
+-- 3
+select departments.dept_name as 'Department Name',
+	concat(employees.first_name,' ',employees.last_name) as 'Department Manager'
+from dept_manager
+join employees
+using(emp_no)
+-- on dept_manager.emp_no=employees.emp_no
+join departments
+using(dept_no)
+where to_date>NOW()
+	and employees.gender like 'f';
 
-SELECT d.dept_name as 'Department Name', CONCAT(e.first_name, ' ', e.last_name) AS 'Department Manager' 
-FROM employees as e 
-JOIN dept_manager as dm
-ON e.emp_no = dm.emp_no
-JOIN departments as d
-ON d.dept_no = dm.dept_no
-WHERE dm.to_date = '9999-01-01' AND e.gender = 'f';
+-- 4
+select titles.title as Title,
+	count(title) as Count
+from departments
+join dept_emp
+using(dept_no)
+join titles
+using(emp_no)
+where dept_emp.to_date>NOW()
+	and titles.to_date>NOW()
+	and dept_name like 'customer service'
+group by titles.title
+order by titles.title;
 
--- Question 4: 
+-- 5
+select -- *
 
-SELECT t.title as 'Title', COUNT(t.emp_no) as 'Count'
-FROM titles as t
-JOIN dept_emp as de
-USING (emp_no)
-JOIN departments as d
-USING (dept_no)
-WHERE t.to_date = '9999-01-01' AND d.dept_name = 'Customer Service' AND de.to_date = '9999-01-01'
-GROUP BY t.title
-ORDER BY t.title;
+-- /*
+departments.dept_name as 'Department Name',
+	concat(employees.first_name,' ',employees.last_name) as 'Name', 
+	salaries.salary as Salary
 
--- Question 5: 
 
-SELECT d.dept_name as 'Department Name', CONCAT(e.first_name, ' ', e.last_name) AS 'Name', s.salary as 'Salary' 
-FROM employees as e 
-JOIN dept_manager as dm
-ON e.emp_no = dm.emp_no
-JOIN departments as d
-ON d.dept_no = dm.dept_no
-JOIN salaries as s
-ON s.emp_no = e.emp_no
-WHERE dm.to_date = '9999-01-01' AND s.to_date = '9999-01-01'
-ORDER BY d.dept_name;
+-- */	
+	-- titles.title as Title,
+	-- count(title) as Count
+from departments
+join dept_manager
+using(dept_no)
+join salaries
+using(emp_no)
+join employees
+using(emp_no)
+where salaries.to_date>NOW()
+	and dept_manager.to_date>NOW()
+	-- and dept_name like 'customer service'
+-- group by titles.title
+order by departments.dept_name
+-- limit 10
+;
+
+-- the following work is copied from a deskmate. i made a save mistake. we did all work together on much of the code and i did solve all the questions myself before the data loss.
+
 
 -- Question 6: 
 
@@ -156,27 +191,6 @@ JOIN dept_manager as dm
 USING (dept_no)
 WHERE dm.to_date = '9999-01-01' AND de.to_date = '9999-01-01'
 GROUP BY e.first_name, e.last_name, d.dept_name, dm.emp_no;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
