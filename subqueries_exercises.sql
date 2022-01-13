@@ -77,22 +77,38 @@ to_date >NOW()
 
 -- 6
 -- 
-SELECT (count(max(salary)-stddev(salary)))/(count(salary))
-FROM salaries
-WHERE to_date >now()
-;
+-- SELECT (count(max(salary)-stddev(salary)))/(count(salary))
+-- FROM salaries
+-- WHERE to_date >now()
+-- ;
 
-WHERE salary >
-	(
-	SELECT count(max(salary)-stddev(salary))
-	FROM salaries
-	)
-AND 
-to_date >NOW()
-;
+-- WHERE salary >
+-- 	(
+-- 	SELECT count(max(salary)-stddev(salary))
+-- 	FROM salaries
+-- 	)
+-- AND 
+-- to_date >NOW()
+-- ;
 
-(
-SELECT count(salary)
-FROM salaries
-)
+-- (
+-- SELECT count(salary)
+-- FROM salaries
+-- )
+-- ;
+
+SELECT CONCAT(e.first_name, ' ', e.last_name) AS 'Employee Name',
+       d.dept_name AS 'Department Name',
+       CONCAT(man.first_name, ' ', man.last_name) AS 'Manager Name'
+  FROM employees AS man
+    JOIN dept_manager as dm
+      ON man.emp_no = dm.emp_no
+    JOIN departments AS d
+      ON dm.dept_no = d.dept_no
+    JOIN dept_emp AS de
+      ON d.dept_no = de.dept_no
+    JOIN employees AS e
+      ON de.emp_no = e.emp_no
+  WHERE de.to_date LIKE '9%'
+    AND dm.to_date LIKE '9%'
 ;
