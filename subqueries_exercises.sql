@@ -96,5 +96,3 @@ SELECT count(salary)
 FROM salaries
 )
 ;
-
-
