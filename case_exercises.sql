@@ -13,6 +13,24 @@ JOIN dept_emp de
 USING (emp_no)
 ;
 
+-- Zachs more complicated version
+-- SELECT
+--     e.emp_no,
+--     de.dept_no,
+--     e.start_date,
+--     IF(e.end_date > NOW(), NULL, e.end_date),
+--     e.is_current_employee
+-- FROM dept_emp de
+-- JOIN (
+--     SELECT
+--         e.emp_no AS emp_no,
+--         e.hire_date AS start_date,
+--         MAX(de.to_date) AS end_date,
+--         MAX(de.to_date) > NOW() AS is_current_employee
+--     FROM employees e
+--     JOIN dept_emp de USING (emp_no)
+--     GROUP BY e.emp_no
+-- ) e ON de.emp_no = e.emp_no AND de.to_date = e.end_date;
 -- 2
 SELECT
 CONCAT(e.first_name,' ', e.last_name) 'Employee',
