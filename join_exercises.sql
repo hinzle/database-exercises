@@ -181,7 +181,10 @@ ORDER BY average_salary DESC;
 -- Bonus 
 -- Question 11: 
 
-SELECT CONCAT(e.first_name, ' ', e.last_name) as 'Employee Name', d.dept_name as 'Department Name', CONCAT(e.first_name, ' ', e.last_name) as 'Manager Name'
+SELECT 
+CONCAT(e.first_name, ' ', e.last_name) as 'Employee Name', 
+d.dept_name as 'Department Name', 
+CONCAT(e.first_name, ' ', e.last_name) as 'Manager Name'
 FROM departments as d
 JOIN dept_emp as de 
 USING (dept_no)

@@ -76,40 +76,26 @@ to_date >NOW()
 ;
 
 6
--- 
--- SELECT (count(max(salary)-stddev(salary)))/(count(salary))
--- FROM salaries
--- WHERE to_date >now()
--- ;
+-- The following code is copied from an accomplice.
+-- Ryan Orsinger and I sat after class and hashed this problem out with our own code but due to a series of unfortunate sqlace saves, none of that code is any longer in existance to the great disdain of us all :(
 
--- WHERE salary >
--- 	(
--- 	SELECT count(max(salary)-stddev(salary))
--- 	FROM salaries
--- 	)
--- AND 
--- to_date >NOW()
--- ;
-
--- (
--- SELECT count(salary)
--- FROM salaries
--- )
--- ;
-use employees;
-SELECT CONCAT(e.first_name, ' ', e.last_name) AS 'Employee Name',
-       d.dept_name AS 'Department Name',
-       CONCAT(man.first_name, ' ', man.last_name) AS 'Manager Name'
-  FROM employees AS man
-    JOIN dept_manager as dm
-      ON man.emp_no = dm.emp_no
-    JOIN departments AS d
-      ON dm.dept_no = d.dept_no
-    JOIN dept_emp AS de
-      ON d.dept_no = de.dept_no
-    JOIN employees AS e
-      ON de.emp_no = e.emp_no
-  WHERE de.to_date LIKE '9%'
-    AND dm.to_date LIKE '9%'
-limit 10
+SELECT COUNT(salary) 'Within a Standard Deviation of Highest Salary'
+  FROM salaries 
+ WHERE to_date LIKE '9%'
+   AND salary >
+		   (SELECT MAX(salary) FROM salaries WHERE to_date LIKE '9%')
+		   - (SELECT STDDEV(salary) FROM salaries WHERE to_date LIKE '9%'); # Salaries within 1 standard deviation: 83
+		   
+SELECT(
+	   (SELECT COUNT(*)
+		FROM salaries
+		WHERE to_date LIKE '9%'
+     AND salary > (
+	   (SELECT MAX(salary) FROM salaries WHERE to_date LIKE '9%')
+		   - (SELECT STDDEV(salary) FROM salaries WHERE to_date LIKE '9%')
+             )
+             )
+           /(SELECT COUNT(*)
+           FROM salaries
+           WHERE to_date > now())) * 100 AS 'percentage within a standard deviation of highest salary'
 ;
